@@ -48,7 +48,6 @@ export const authOptions = {
           }
 
           const data = await res.json();
-          console.log("Fetched /api/v1/me data:", data);
           const identity = data.identity || data;
 
           token.id = identity.id || identity.sub || token.id;

@@ -12,7 +12,10 @@ export default async function handler(req, res) {
     const base = encodeURIComponent("Boba Club Dashboard");
 
     const eventSelect = encodeURIComponent(
-      JSON.stringify({ filterByFormula: `{Event Code} = '${code}'` })
+      JSON.stringify({
+        filterByFormula: `{Event Code} = '${code}'`,
+        fields: ["Event Code", "Status"]
+      })
     );
     const eventUrl = `https://airbridge.hackclub.com/v0.2/${base}/Event Codes?select=${eventSelect}&authKey=${key}`;
 
@@ -112,9 +115,11 @@ export default async function handler(req, res) {
       })
       .filter((e) => e !== undefined);
 
+    const eventStatus = eventRecords[0]?.fields?.Status || eventRecords[0]?.Status || "Active";
+
     return res
       .status(200)
-      .json({ records: normalized, raw: json, event: eventJson });
+      .json({ records: normalized, raw: json, event: eventJson, eventStatus });
   } catch (err) {
     console.error("API fetch error", err);
     return res.status(500).json({ error: err.message || "Unknown error" });

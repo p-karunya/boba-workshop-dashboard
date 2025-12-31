@@ -104,36 +104,61 @@ export default function Header({ session, showProfile, setShowProfile }) {
                   position: "absolute",
                   top: "52px",
                   right: 0,
-                  width: [240, 260],
+                  width: [280, 300],
                   textAlign: "left",
                   boxShadow: "0px 8px 24px rgba(0,0,0,0.25)",
                   zIndex: 10,
                   p: 4,
                   bg: "background",
-                  borderRadius: 40,
+                  borderRadius: 20,
                   border: "2px solid",
-                  borderColor: "white",
+                  borderColor: "primary",
                 }}
               >
-                <Heading as="h3" sx={{ fontSize: 2, mb: 2, color: "primary" }}>
-                  {session.user?.name || "Profile"}
-                </Heading>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowProfile(false)}
-                  sx={{ mt: 3, width: "100%" }}
-                >
-                  Close
-                </Button>
-                <Button
-                  onClick={() => {
-                    setShowProfile(false);
-                    signOut();
-                  }}
-                  sx={{ mt: 2, width: "100%", bg: "accent" }}
-                >
-                  Sign Out
-                </Button>
+                <Box sx={{ mb: 3, pb: 3, borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                  <Heading as="h3" sx={{ fontSize: 3, mb: 2, color: "primary" }}>
+                    {session.user?.name || "Profile"}
+                  </Heading>
+                  {session.user?.email && (
+                    <Text sx={{ fontSize: 1, color: "rgba(248, 251, 255, 0.6)" }}>
+                      {session.user.email}
+                    </Text>
+                  )}
+                </Box>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setShowProfile(false)}
+                    sx={{
+                      width: "100%",
+                      bg: "rgba(255, 255, 255, 0.05)",
+                      color: "text",
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                      "&:hover": {
+                        bg: "rgba(255, 255, 255, 0.08)",
+                      },
+                    }}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowProfile(false);
+                      signOut();
+                    }}
+                    sx={{
+                      width: "100%",
+                      bg: "primary",
+                      color: "white",
+                      border: "none",
+                      "&:hover": {
+                        bg: "#ff4961",
+                      },
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </Box>
               </Card>
             </>
           )}

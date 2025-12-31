@@ -1,4 +1,13 @@
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+
 export default async function handler(req, res) {
+  // Check authentication
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const { code } = req.query;
   const key = process.env.AIRBRIDGE_API_KEY;
 
@@ -11,8 +20,14 @@ export default async function handler(req, res) {
   try {
     const base = encodeURIComponent("Boba Club Dashboard");
 
+    // Sanitize code to prevent injection
+    const sanitizedCode = String(code).replace(/'/g, "\\'");
+
     const eventSelect = encodeURIComponent(
-      JSON.stringify({ filterByFormula: `{Event Code} = '${code}'` })
+      JSON.stringify({
+        filterByFormula: `{Event Code} = '${sanitizedCode}'`,
+        fields: ["Event Code", "Status"]
+      })
     );
     const eventUrl = `https://airbridge.hackclub.com/v0.2/${base}/Event Codes?select=${eventSelect}&authKey=${key}`;
 
@@ -112,9 +127,11 @@ export default async function handler(req, res) {
       })
       .filter((e) => e !== undefined);
 
+    const eventStatus = eventRecords[0]?.fields?.Status || eventRecords[0]?.Status || "Active";
+
     return res
       .status(200)
-      .json({ records: normalized, raw: json, event: eventJson });
+      .json({ records: normalized, raw: json, event: eventJson, eventStatus });
   } catch (err) {
     console.error("API fetch error", err);
     return res.status(500).json({ error: err.message || "Unknown error" });

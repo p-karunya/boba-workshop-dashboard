@@ -16,7 +16,6 @@ export default function Event() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [rawResponse, setRawResponse] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,7 +79,6 @@ export default function Event() {
         const json = await res.json();
         if (!res.ok)
           throw new Error(json?.error || `Request failed: ${res.status}`);
-        setRawResponse(json.raw ?? json);
         setRows(json.records || []);
         setEventStatus(json.eventStatus || "Active");
       } catch (err) {

@@ -32,10 +32,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid amount' });
   }
 
-  // Validate approvedCount is a positive integer
+  // Validate approvedCount is a positive integer and at least 3
   const numApprovedCount = Number(approvedCount);
-  if (!Number.isInteger(numApprovedCount) || numApprovedCount <= 0 || numApprovedCount > 10000) {
-    return res.status(400).json({ error: 'Invalid approved count' });
+  if (!Number.isInteger(numApprovedCount) || numApprovedCount < 3 || numApprovedCount > 10000) {
+    return res.status(400).json({ error: 'Invalid approved count - minimum 3 approved submissions required' });
   }
 
   // Validate payment method is one of the allowed values

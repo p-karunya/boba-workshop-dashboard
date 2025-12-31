@@ -113,8 +113,8 @@ export default function Event() {
   }, [rows]);
 
   const isGrantButtonDisabled = useMemo(() => {
-    // Disable if no approved submissions
-    if (approvedCount === 0) return true;
+    // Disable if less than 3 approved submissions
+    if (approvedCount < 3) return true;
 
     // Disable if event is deactivated
     if (eventStatus === "Deactivated") return true;
@@ -131,7 +131,7 @@ export default function Event() {
   }, [approvedCount, eventStatus, grantRequestCooldown]);
 
   const getGrantButtonText = () => {
-    if (approvedCount === 0) return "Request Grant";
+    if (approvedCount < 3) return `Need ${3 - approvedCount} more approved`;
     if (eventStatus === "Deactivated") return "Grant Sent";
     if (grantRequestCooldown) {
       const now = new Date();
